@@ -91,12 +91,33 @@ def import_from_csv(cur):
     except:
         print("error")
 
+def search_by_pattern(cur):
+    pattern = input("Search pattern: ")
+    cur.execute("SELECT * FROM search_phone_records(%s)", (pattern,))
+    for row in cur.fetchall():
+        print(row)
+
+def add_or_update(cur, conn):
+    surname = input("surname: ")
+    name = input("name: ")
+    num = input("num: ")
+    cur.callproc('upsert_contact', [surname, name, num])
+    conn.commit()
+    print("ok")
+
+def paginated_view(cur):
+    limit = int(input("limit: ") or "10") if input("show with limit? y/n: ").lower() == 'y' else 100
+    offset = int(input("offset: ") or "0") if input("show with offset? y/n: ").lower() == 'y' else 0
+    cur.execute("SELECT * FROM get_page(%s, %s)", (limit, offset))
+    for row in cur.fetchall():
+        print(row)
+
 def launch():
     config = load_config()
     try:
         with psycopg2.connect(**config) as conn:
             with conn.cursor() as cur:
-                menu = input("what's type of operation you will do? \n1. Get all nums\n2. Get some nums\n3. Add nums\n4. Update nums\n5. Delete nums\n6. Your own command\n7. Import from csv\n")
+                menu = input("what's type of operation you will do? \n1. Get all nums\n2. Get some nums\n3. Add nums\n4. Update nums\n5. Delete nums\n6. Your own command\n7. Import from csv\n8. Search by pattern\n9. Add or update\n10. Paginated view\n")
                 if menu == "1": 
                     for i in get_all_nums(cur):
                         print(i)
@@ -105,16 +126,26 @@ def launch():
                         print(i)
                 if menu == "3": 
                     add_nums(cur)
+                    conn.commit()
                 if menu == "4": 
                     change_nums(cur)
+                    conn.commit()
                 if menu == "5": 
                     delete_nums(cur)
+                    conn.commit()
                 if menu == "6": 
                     command = input()
                     cur.execute(command)
-
+                    conn.commit()
                 if menu == "7":
                     import_from_csv(cur)
+                    conn.commit()
+                if menu == "8":
+                    search_by_pattern(cur)
+                if menu == "9":
+                    add_or_update(cur, conn)
+                if menu == "10":
+                    paginated_view(cur)
                 
     except:
         print("error")

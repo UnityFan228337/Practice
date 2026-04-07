@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-def load_config(filename=r'7/database.ini', section='postgresql'):
+def load_config(filename=r'8/database.ini', section='postgresql'):
     parser = ConfigParser()
     parser.read(filename)
     # get section, default to postgresql
