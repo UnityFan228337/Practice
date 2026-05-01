@@ -1,1 +1,4 @@
-mal, yar, 888888888
+﻿surname,name,email,birthday,group,phone1,phone1_type,phone2,phone2_type
+Doe,John,john.doe@gmail.com,1990-05-18,Work,555-1234,work,555-9876,mobile
+Smith,Anna,anna.smith@yahoo.com,1988-11-02,Friend,555-5555,home,,
+Ivanov,Petr,petr.ivanov@mail.ru,1995-07-20,Family,888-1111,home,888-2222,work
